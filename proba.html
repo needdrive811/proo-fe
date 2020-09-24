@@ -1,16 +1,41 @@
-\*Uploadanje filea\*
-
-\**\
-
-<input type="file" id="file" style="display:none;" />
-<button id="button" name="button" value="Upload" onclick="thisFileUpload();">Upload</button>
+<!-- 
+svim tool buttonima ime treba biti "tool_button"
+-->
 
 
-<script>
-        function thisFileUpload() {
-            document.getElementById("file").click();
-        };
-</script>
+<!DOCTYPE html>
+<html>
+<body>
+	
+
+
+<form class="upload" id="upload">
+   <input type="file" id="uploadForm" name="uploadFile" accept=".csv" required /><br><br>
+	<label for="input1"></label>
+	<input type="text" id="input1" name="fname" disabled=true><br><br>
+	<label for="input2"></label>
+	<input type="text" id="input2" name="lname" disabled=true><br><br>
+	<label for="input3"></label>
+	<input type="text" id="input3" name="fname" disabled=true><br><br>
+   <br/><br/>
+   <input type="submit" />
+</form>
+<br>
+<button id="bkt_button" name="tool_button" type="button">BKT</button>
+<button id="cluster_button" name="tool_button" type="button">Question clustering</button>
+<button id="aprx_button" name="tool_button" type="button">Approximate number of concepts</button>
+<button id="exrec_button" name="tool_button" type="button">ExeRec</button><br><br>
+<button id="reset_button" name="reset_button" type="button">Reset</button>
+
+<br><br>
+<form>
+  
+</form>
+<br><br>
+<button id="start_button" name="start_button" type="button">Start tool</button><br>
 
 
 
+	<script src="app.js"></script>
+</body>
+</html>
