@@ -1,29 +1,74 @@
+/*
+TO-DO
+
+-provjera unosa
+-http POST zahtjev gdje se sve salje
+-output teksta i slike (kako sliku generiranu u backendu prikazati na frontendu?)
+
+-file ne moze biti u JSONU, ali u form data se moze nalaziti JSON
+*/
+
+
 //Uzimanje filea iz forme i slanje na backend
 const uploadForm = document.querySelector('#upload');
-//console.log(uploadForm)
-uploadForm.elements[0].addEventListener('submit', function(e) {
+console.log(uploadForm)
+console.log(uploadForm.elements)
+uploadForm.elements[4].addEventListener('click', function(e) {
    e.preventDefault()
+   alert("POZVAO SI SUBMIT");
+   parameters=[];
+   textFields.forEach(el=>{
+	if(el.disabled == false){
+		if(el.value=""){
+			alert("Nisu ispunjena sva polja");
+			return;
+		}
+		parameters.push(el.value);
+	}
+   })
+   console.log(parameters);
+   
+   const xhr = new XMLHttpRequest();
+   //TEMPORARY
+   outputImg.style.display = 'block';
+   outputText.value="PROBNI IZLAZ"
+  
+   
+   // Define what happens on successful data submission
+			xhr.onload = () => {
+				// Process our return data
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					// Runs when the request is successful
+					
+					/*
+					Dohvacanje rezultata, pretvorba slike? potavljanje src od outputImg na tu varijablu, postavljanje texta iz responsa u outputText
+					*/
+					
+					var result = JSON.parse(xhr.responseText);
+					alert(result.prediction);
+				}
+			};
+			// Define what happens in case of error
+			xhr.onerror = () => {
+				alert('Oops! Something went wrong.');
+			};
+			//STAVITI PRAVI LINK
+			xhr.open("POST", "https://skriboo-be.herokuapp.com/extract");
    
    /*
-   let file = e.target.uploadFile.files[0]
-   let formData = new FormData()
-   formData.append('file', file)
-   fetch('http://localhost:3000/upload_files', {
-      method: 'POST',
-      body: formData
-   })
-   .then(resp => resp.json())
-   .then(data => {
-      if (data.errors) {
-         alert(data.errors)
-      }
-      else {
-         console.log(data)
-      }
-   })
+   var data = JSON.stringify({ "tool_name": state, "parameters":parameters }); 
+   
+   let file = e.target.uploadFile.files[0];
+   let formData = new FormData();
+   formData.append('file', file);
+   formData.append('json', data);
    */
+   
+  // xhr.send(data);
 });
 
+var outputText=document.getElementById("output_text");
+var outputImg=document.getElementById("output_img");
 
 
 //Eventovi i funkcije sa gumbima
@@ -40,20 +85,10 @@ var aprxButton= document.getElementById("aprx_button");
 var exrecButton= document.getElementById("exrec_button");
 var clusterButton= document.getElementById("cluster_button");
 
-//var toolButtons=[bktButton,clusterButton,exrecButton,aprxButton]
-
 var toolButtons=document.getElementsByName("tool_button");
 //PRIVREMENO
 var startButton=document.getElementById("start_button");
 startButton.addEventListener("click",()=>{
-	
-   parameters=[]
-   textFields.forEach(el=>{
-	if(el.disabled == false){
-		parameters.push(el.value)
-	}
-   })
-   console.log(parameters)
 });
 
 //Listeneri-specificna ponasanja za gumbe
@@ -92,9 +127,6 @@ toolButtons.forEach(btn =>btn.addEventListener("click",()=>{
 	disableOtherButtons(btn)
 }));
 
-
-
-
 function disableButton(el){
 	disabledButtons.push(el);
 	el.disabled= true;
@@ -123,38 +155,6 @@ function resetButtons(){
 	});
 	disabledButtons=[];
 	state='none'
-}
-
-function sendJSON(dataset,parameters){
-	
-			let tool = document.querySelector('.result'); 
-            let name = document.querySelector('#name'); 
-            let email = document.querySelector('#email'); 
-               
-            // Creating a XHR object 
-            let xhr = new XMLHttpRequest(); 
-            let url = "submit.php"; //TREBA STAVITI URL
-        
-            // open a connection 
-            xhr.open("POST", url, true); 
-  
-            // Set the request header i.e. which type of content you are sending 
-            xhr.setRequestHeader("Content-Type", "application/json"); 
-  
-            // Create a state change callback 
-            xhr.onreadystatechange = function () { 
-                if (xhr.readyState === 4 && xhr.status === 200) { 
-  
-                    // Print received data from server 
-                    result.innerHTML = this.responseText; 
-  
-                } 
-            }; 
-			
-            // Converting JSON data to string 
-            var data = JSON.stringify({ "tool_name": state, "dataset": dataset, "parameters":parameters }); 
-  
-            // Sending data with the request 
-            xhr.send(data); 
-	
+	outputImg.style.display = 'none';
+	outputText.value="";
 }
