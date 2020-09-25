@@ -10,23 +10,22 @@ TO-DO
 
 
 //Uzimanje filea iz forme i slanje na backend
-const uploadForm = document.querySelector('#upload');
+const uploadForm = document.querySelector('.upload'); // . oznacava klasu # oznacava id
 console.log(uploadForm)
 console.log(uploadForm.elements)
-uploadForm.elements[4].addEventListener('click', function(e) {
-   e.preventDefault()
-   alert("POZVAO SI SUBMIT");
+
+
+uploadForm.addEventListener('submit', function(e) {
+   e.preventDefault();
+
    parameters=[];
-   textFields.forEach(el=>{
-	if(el.disabled == false){
-		if(el.value=""){
-			alert("Nisu ispunjena sva polja");
+   for(i=0;i<=textFields.length;i++){
+	   if(textFields[i].disabled="false" && textFields[i].value==""){
+		   alert("Nisu ispunjena sva polja");
+		   resetButtons();
 			return;
-		}
-		parameters.push(el.value);
-	}
-   })
-   console.log(parameters);
+	   } 
+   }
    
    const xhr = new XMLHttpRequest();
    //TEMPORARY
@@ -39,13 +38,10 @@ uploadForm.elements[4].addEventListener('click', function(e) {
 				// Process our return data
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					// Runs when the request is successful
-					
-					/*
-					Dohvacanje rezultata, pretvorba slike? potavljanje src od outputImg na tu varijablu, postavljanje texta iz responsa u outputText
-					*/
-					
+				
 					var result = JSON.parse(xhr.responseText);
-					alert(result.prediction);
+					outputText.value=result.outputText;
+					outputImg.setAttribute('src',"data:image/png;base64,"+response.outputImg);//outputImg bi trebao biti string slike u png formatu
 				}
 			};
 			// Define what happens in case of error
@@ -55,16 +51,15 @@ uploadForm.elements[4].addEventListener('click', function(e) {
 			//STAVITI PRAVI LINK
 			xhr.open("POST", "https://skriboo-be.herokuapp.com/extract");
    
-   /*
+   
    var data = JSON.stringify({ "tool_name": state, "parameters":parameters }); 
    
    let file = e.target.uploadFile.files[0];
    let formData = new FormData();
    formData.append('file', file);
    formData.append('json', data);
-   */
    
-  // xhr.send(data);
+ //  xhr.send(data);
 });
 
 var outputText=document.getElementById("output_text");
